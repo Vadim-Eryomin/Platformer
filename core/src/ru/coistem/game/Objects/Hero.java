@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Hero extends GameObject {
+public class Hero extends Person {
+
     @Override
     public void create(Texture texture, World world, float x, float y) {
         sprite = new Sprite(texture);
@@ -22,19 +23,20 @@ public class Hero extends GameObject {
     @Override
     public void act(float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.W) && isGrounded()) {
-            yImpl += 1000000;
+            yImpl = 2000000;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            xImpl -= 50000;
+            xImpl -= 200000;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            xImpl += 50000;
+            xImpl += 200000;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) System.exit(0);
 
-        body.applyLinearImpulse(xImpl, yImpl, body.getPosition().x, body.getPosition().y, true);
+//        body.applyLinearImpulse(xImpl, yImpl + 5 * body.getWorld().getGravity().y, body.getPosition().x, body.getPosition().y, true);
+        body.setLinearVelocity(xImpl * (yImpl >= 0 ? 5 : 1), yImpl);
         xImpl = 0;
-        yImpl = 0;
+        yImpl -= yImpl >= 0 ? 50000 : 0;
         sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2, body.getPosition().y - sprite.getHeight() / 2);
         body.setFixedRotation(true);
     }
